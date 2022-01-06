@@ -8,15 +8,20 @@ accelerate launch run_luke_ner_no_trainer.py --model_name_or_path studio-ousia/l
 
 Training for the ZH Track:
 ```
-accelerate launch run_ner_no_trainer.py --model_name_or_path hfl/chinese-roberta-wwm-ext-large --dataset_name multiconer --dataset_config_name NER.zh --output_dir ./results-ZH --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 32 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
+accelerate launch run_ner_no_trainer.py --model_name_or_path hfl/chinese-roberta-wwm-ext-large --dataset_name multiconer --dataset_config_name NER.zh --output_dir ./results-ZH --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
 ```
 
 Training for the ES Track:
 ```
-accelerate launch run_ner_no_trainer.py --model_name_or_path PlanTL-GOB-ES/roberta-large-bne --dataset_name multiconer --dataset_config_name NER.zh --output_dir ./results-ZH --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 32 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
+accelerate launch run_ner_no_trainer.py --model_name_or_path PlanTL-GOB-ES/roberta-large-bne --dataset_name multiconer --dataset_config_name NER.es --output_dir ./results-ZH --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
 ```
 
 Training for the RU Track:
 ```
-accelerate launch run_ner_no_trainer.py --model_name_or_path sberbank-ai/ruRoberta-large --dataset_name multiconer --dataset_config_name NER.zh --output_dir ./results-ZH --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 32 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
+accelerate launch run_ner_no_trainer.py --model_name_or_path sberbank-ai/ruRoberta-large --dataset_name multiconer --dataset_config_name NER.ru --output_dir ./results-ZH --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
+```
+
+Training for the NL Track:
+```
+accelerate launch run_ner_no_trainer.py --model_name_or_path pdelobelle/robbert-v2-dutch-base --dataset_name multiconer --dataset_config_name NER.nl --output_dir ./results-ZH --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
 ```
