@@ -8,7 +8,7 @@ accelerate launch run_luke_ner_no_trainer.py --model_name_or_path studio-ousia/l
 
 Training for the ZH Track:
 ```
-accelerate launch run_ner_no_trainer.py --model_name_or_path hfl/chinese-roberta-wwm-ext-large --dataset_name multiconer --dataset_config_name NER.zh --output_dir ./results-ZH --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
+accelerate launch run_ner_no_trainer.py --model_name_or_path hfl/chinese-roberta-wwm-ext-large --dataset_name multiconer --dataset_config_name NER.zh --output_dir ./results-ZH --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90 --max_length 256
 ```
 
 Training for the ES Track:
@@ -34,4 +34,14 @@ accelerate launch run_ner_no_trainer.py --model_name_or_path dbmdz/convbert-base
 Training for the KO Track:
 ```
 accelerate launch run_ner_no_trainer.py --model_name_or_path klue/roberta-large --dataset_name multiconer --dataset_config_name NER.ko --output_dir ./results-KO --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
+```
+
+Training for the FA Track:
+```
+accelerate launch run_ner_no_trainer.py --model_name_or_path HooshvareLab/roberta-fa-zwnj-base --dataset_name multiconer --dataset_config_name NER.fa --output_dir ./results-FA --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
+```
+
+Training for the DE Track:
+```
+accelerate launch run_ner_no_trainer.py --model_name_or_path deepset/gelectra-large --dataset_name multiconer --dataset_config_name NER.de --output_dir ./results-DE --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90
 ```

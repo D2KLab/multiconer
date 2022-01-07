@@ -87,6 +87,7 @@ class MultiCoNER(datasets.GeneratorBasedBuilder):
         if self.config.name.startswith("NER"):
             features = datasets.Features(
                 {
+                    "guid": datasets.Value("string"),
                     "tokens": datasets.Sequence(datasets.Value("string")),
                     "ner_tags": datasets.Sequence(
                         datasets.features.ClassLabel(
@@ -159,6 +160,7 @@ class MultiCoNER(datasets.GeneratorBasedBuilder):
                 if line == "" or line == "\n":
                     if tokens:
                         yield guid_index, {
+                            "guid": guid_index,
                             "tokens": tokens,
                             "ner_tags": ner_tags,
                             "langs": langs,
@@ -175,6 +177,7 @@ class MultiCoNER(datasets.GeneratorBasedBuilder):
                     ner_tags.append(splits[-1].replace("\n", ""))
             if tokens:
                 yield guid_index, {
+                    "guid": guid_index,
                     "tokens": tokens,
                     "ner_tags": ner_tags,
                     "langs": langs,
