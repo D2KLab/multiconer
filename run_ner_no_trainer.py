@@ -31,6 +31,8 @@ from datasets import ClassLabel, load_dataset, load_metric
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
+from Chinese_translator import main_chinese_translation as Zh_trans
+
 import transformers
 from accelerate import Accelerator
 from huggingface_hub import Repository
@@ -281,6 +283,12 @@ def main():
             data_files["validation"] = args.validation_file
         extension = args.train_file.split(".")[-1]
         raw_datasets = load_dataset(extension, data_files=data_files)
+
+    # Pre-processing of Chinese language to cover the traditional Chinese to simplified Chinese.
+    if args.dataset_config_name == 'NER.zh':
+        raw_datasets = raw_datasets.map(Zh_trans)
+
+
     # Trim a number of training examples
     if args.debug:
         for split in raw_datasets.keys():
@@ -318,6 +326,8 @@ def main():
         label_list = list(unique_labels)
         label_list.sort()
         return label_list
+
+
 
     if isinstance(features[label_column_name].feature, ClassLabel):
         label_list = features[label_column_name].feature.names

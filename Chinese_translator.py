@@ -1,5 +1,11 @@
+'''
+This function provides a tool that automatically detect Traditional Chinese and convert it to Simplified Chinese.
+At the same time, the ner tags mismatch caused by the change in word count due to translation is also corrected.
+'''
+
 import hanzidentifier
 from zhconv import convert
+
 
 def convert_Chinese(sentence, nertags):
     output_list = []
@@ -40,53 +46,51 @@ def convert_Chinese(sentence, nertags):
         return output_list, nertags
 
 
-def chinese_translation(raw_datasets):
-    all_tokens = []
-    all_ner_tags = []
-    for tokens,ner_tags in zip(raw_datasets["train"]['tokens'], raw_datasets["train"]['ner_tags']):
+def main_chinese_translation(example):
 
-        sentence_segmentation_mention_list = []
-        ner_tags_list = []
+    short_memory = 100
 
-        current_sentence_segmentation_mention_list = []
-        current_ner_tags_list = []
+    sentence_segmentation_mention_list = []
+    ner_tags_list = []
 
-        short_memory = 100
+    current_sentence_segmentation_mention_list = []
+    current_ner_tags_list = []
 
-        for token,ner_tag in zip(tokens,ner_tags):
+    for token, ner_tag in zip(example['tokens'], example['ner_tags']):
 
-            if int(short_memory) == int(ner_tag) and (int(ner_tag)%2 == 0):
-                current_sentence_segmentation_mention_list.append(token)
-                current_ner_tags_list.append(ner_tag)
-                short_memory = ner_tag
-            elif (int(short_memory) == (int(ner_tag) - 1)) and (int(ner_tag)%2 == 0):
-                current_sentence_segmentation_mention_list.append(token)
-                current_ner_tags_list.append(ner_tag)
-                short_memory = ner_tag
-            elif short_memory == 100:
-                current_sentence_segmentation_mention_list.append(token)
-                current_ner_tags_list.append(ner_tag)
-                short_memory = ner_tag
-            else:
-                # Translation for a sequence, each sequence consists tokens with same tag.
-                Chinese_translation = convert_Chinese(current_sentence_segmentation_mention_list, current_ner_tags_list)
-                sentence_segmentation_mention_list.extend(Chinese_translation[0])
-                ner_tags_list.extend(Chinese_translation[1])
-                # Begining a new sequence
-                current_sentence_segmentation_mention_list = [token]
-                current_ner_tags_list = [ner_tag]
-                short_memory = ner_tag
+        if int(short_memory) == int(ner_tag) and (int(ner_tag) % 2 == 0):
+            current_sentence_segmentation_mention_list.append(token)
+            current_ner_tags_list.append(ner_tag)
+            short_memory = ner_tag
+        elif (int(short_memory) == (int(ner_tag) - 1)) and (int(ner_tag) % 2 == 0):
+            current_sentence_segmentation_mention_list.append(token)
+            current_ner_tags_list.append(ner_tag)
+            short_memory = ner_tag
+        elif short_memory == 100:
+            current_sentence_segmentation_mention_list.append(token)
+            current_ner_tags_list.append(ner_tag)
+            short_memory = ner_tag
+        else:
+            # Translation for a sequence, each sequence consists tokens with same tag.
+            Chinese_translation_ = convert_Chinese(current_sentence_segmentation_mention_list, current_ner_tags_list)
+            sentence_segmentation_mention_list.extend(Chinese_translation_[0])
+            ner_tags_list.extend(Chinese_translation_[1])
+            # Begining a new sequence
+            current_sentence_segmentation_mention_list = [token]
+            current_ner_tags_list = [ner_tag]
+            short_memory = ner_tag
 
-        Chinese_translation = convert_Chinese(current_sentence_segmentation_mention_list, current_ner_tags_list)
-        sentence_segmentation_mention_list.extend(Chinese_translation[0])
-        ner_tags_list.extend(Chinese_translation[1])
+    Chinese_translation_ = convert_Chinese(current_sentence_segmentation_mention_list, current_ner_tags_list)
+    sentence_segmentation_mention_list.extend(Chinese_translation_[0])
+    ner_tags_list.extend(Chinese_translation_[1])
 
-        all_tokens.append(sentence_segmentation_mention_list)
-        all_ner_tags.append(ner_tags_list)
-    return all_tokens, all_ner_tags
+    example['tokens'] = sentence_segmentation_mention_list
+    example['ner_tags'] = ner_tags_list
+
+    return example
+
 
 if __name__ == '__main__':
     output = ["不", "限", "於", "PC", "占", "士", "邦", "电", "影"]
-    tages = [1, 2, 2, 2, 2, 2, 2, 2, 2]
+    tages = [1, 2, 2, 2, 2, 2, 2, 0, 0]
     print(convert_Chinese(output, tages))
-    
