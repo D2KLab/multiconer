@@ -31,7 +31,7 @@ from datasets import ClassLabel, load_dataset, load_metric
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
-from Chinese_translator import main_chinese_translation as Zh_trans
+from Chinese_translator import convert_Chinese_all, convert_Chinese_pa
 
 import transformers
 from accelerate import Accelerator
@@ -120,6 +120,12 @@ def parse_args():
         type=str,
         default=None,
         help="Pretrained config name or path if not the same as model_name",
+    )
+    parser.add_argument(
+        "--charater_wised_translation",
+        action="store_true",
+        default=False,
+        help="Active of the charater wised translation from traditional chinese to simplified chinese.",
     )
     parser.add_argument(
         "--tokenizer_name",
@@ -286,7 +292,10 @@ def main():
 
     # Pre-processing of Chinese language to cover the traditional Chinese to simplified Chinese.
     if args.dataset_config_name == 'NER.zh':
-        raw_datasets = raw_datasets.map(Zh_trans)
+        if args.charater_wised_translation:
+            raw_datasets = raw_datasets.map(convert_Chinese_all)
+        else:
+            raw_datasets = raw_datasets.map(convert_Chinese_pa)
 
 
     # Trim a number of training examples

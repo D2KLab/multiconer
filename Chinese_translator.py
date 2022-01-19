@@ -45,6 +45,72 @@ def convert_Chinese(sentence, nertags):
             nertags.append(added_tokens)
         return output_list, nertags
 
+def convert_Chinese_all(example):
+    output_list = []
+    chinese_cha_sequence = []
+
+    # Simplyfied chinese translation
+    for one_mention in example['tokens']:
+        if (hanzidentifier.has_chinese(one_mention) or "·" == one_mention) and len(one_mention) == 1:
+            chinese_cha_sequence.append(one_mention)
+        else:
+            if len(chinese_cha_sequence) > 0:
+                chinese_cha_sequence = "".join(chinese_cha_sequence)
+                chinese_cha_sequence = convert(chinese_cha_sequence, 'zh-cn')
+                chinese_cha_sequence = list(chinese_cha_sequence)
+                output_list.extend(chinese_cha_sequence)
+            output_list.append(one_mention)
+            chinese_cha_sequence = []
+
+    if len(chinese_cha_sequence) > 0:
+        chinese_cha_sequence = "".join(chinese_cha_sequence)
+        chinese_cha_sequence = convert(chinese_cha_sequence, 'zh-cn')
+        chinese_cha_sequence = list(chinese_cha_sequence)
+        output_list.extend(chinese_cha_sequence)
+
+    if example['tokens'] == output_list:
+        example['tokens'] = output_list
+    elif len(example['tokens']) == len(output_list):
+        example['tokens'] = output_list
+    else:
+        output_list = []
+        for one_mention in example['tokens']:
+            translated = convert(one_mention, 'zh-cn')
+            output_list.append(translated)
+        example['tokens'] = output_list
+
+    return example
+
+
+def convert_Chinese_pa(example):
+    output_list = []
+    chinese_cha_sequence = []
+
+    # Simplyfied chinese translation
+    for one_mention in example['tokens']:
+        if (hanzidentifier.has_chinese(one_mention) or "·" == one_mention) and len(one_mention) == 1:
+            chinese_cha_sequence.append(one_mention)
+        else:
+            if len(chinese_cha_sequence) > 0:
+                chinese_cha_sequence = "".join(chinese_cha_sequence)
+                chinese_cha_sequence = convert(chinese_cha_sequence, 'zh-cn')
+                chinese_cha_sequence = list(chinese_cha_sequence)
+                output_list.extend(chinese_cha_sequence)
+            output_list.append(one_mention)
+            chinese_cha_sequence = []
+
+    if len(chinese_cha_sequence) > 0:
+        chinese_cha_sequence = "".join(chinese_cha_sequence)
+        chinese_cha_sequence = convert(chinese_cha_sequence, 'zh-cn')
+        chinese_cha_sequence = list(chinese_cha_sequence)
+        output_list.extend(chinese_cha_sequence)
+
+    if example['tokens'] == output_list:
+        example['tokens'] = output_list
+    elif len(example['tokens']) == len(output_list):
+        example['tokens'] = output_list
+
+    return example
 
 def main_chinese_translation(example):
 
