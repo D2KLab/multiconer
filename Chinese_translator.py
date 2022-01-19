@@ -45,10 +45,11 @@ def convert_Chinese(sentence, nertags):
             nertags.append(added_tokens)
         return output_list, nertags
 
+
 def convert_Chinese_all(example):
     output_list = []
-    chinese_cha_sequence = []
-
+    chinese_cha_sequence = [] 
+    
     # Simplyfied chinese translation
     for one_mention in example['tokens']:
         if (hanzidentifier.has_chinese(one_mention) or "·" == one_mention) and len(one_mention) == 1:
@@ -81,11 +82,10 @@ def convert_Chinese_all(example):
 
     return example
 
-
 def convert_Chinese_pa(example):
     output_list = []
-    chinese_cha_sequence = []
-
+    chinese_cha_sequence = [] 
+    
     # Simplyfied chinese translation
     for one_mention in example['tokens']:
         if (hanzidentifier.has_chinese(one_mention) or "·" == one_mention) and len(one_mention) == 1:
@@ -105,9 +105,7 @@ def convert_Chinese_pa(example):
         chinese_cha_sequence = list(chinese_cha_sequence)
         output_list.extend(chinese_cha_sequence)
 
-    if example['tokens'] == output_list:
-        example['tokens'] = output_list
-    elif len(example['tokens']) == len(output_list):
+    if len(example['tokens']) == len(output_list):
         example['tokens'] = output_list
 
     return example
