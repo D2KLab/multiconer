@@ -48,12 +48,12 @@ accelerate launch run_ner_no_trainer.py --model_name_or_path deepset/gelectra-la
 
 Training for the HI Track:
 ```
-accelerate launch run_ner_no_trainer.py --model_name_or_path neuralspace-reverie/indic-transformers-hi-roberta --dataset_name multiconer --dataset_config_name NER.hi --output_dir ./results-HI --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 3e-5 --num_train_epochs 90 --max_length 256
+accelerate launch run_ner_no_trainer.py --model_name_or_path neuralspace-reverie/indic-transformers-hi-bert --dataset_name multiconer --dataset_config_name NER.hi --output_dir ./results-HI --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 64 --per_device_eval_batch_size 128 --gradient_accumulation_steps 2 --learning_rate 5e-5 --num_train_epochs 90 --max_length 256
 ```
 
 Training for the BN Track:
 ```
-accelerate launch run_ner_no_trainer.py --model_name_or_path neuralspace-reverie/indic-transformers-bn-xlmroberta --dataset_name multiconer --dataset_config_name NER.bn --output_dir ./results-BN --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 32 --per_device_eval_batch_size 128 --gradient_accumulation_steps 4 --learning_rate 3e-5 --num_train_epochs 90 --max_length 256
+accelerate launch run_ner_no_trainer.py --model_name_or_path neuralspace-reverie/indic-transformers-bn-bert --dataset_name multiconer --dataset_config_name NER.bn --output_dir ./results-BN --task_name ner --return_entity_level_metrics --pre_device-train_batch_size 32 --per_device_eval_batch_size 128 --gradient_accumulation_steps 4 --learning_rate 5e-5 --num_train_epochs 90 --max_length 256
 ```
 
 Training for the Multi Track, create a pretrained model with all the other languages, and then fine tune it on the Multi Track:
