@@ -67,7 +67,7 @@ macro avg		    0.71		0.75		0.72		39652
 
 The goal of this experiment is to train a model over a large number of NER datasets, including MulticoNER 2022. To replicate the 2nd experiment, one can run those lines, still with T-NER:
 ```
-tner-train-search -m "microsoft/deberta-v3-large" -c "/data/multiconer/models/2023/tner/2nd_exp/" -d "tner/tweetner7" " "tner/tweebank_ner" "tner/mit_restaurant" "tner/bionlp2004" "tner/wnut2017" "tner/mit_movie_trivia" "tner/ontonotes5" "tner/bc5cdr" "tner/fin" "tner/btc" "tner/conll2003" -l '{"train": "/data/multiconer/datasets/2022/EN-English/en_train.conll", "validation": "/data/multiconer/datasets/2022/EN-English/en_dev.conll", "test": "/data/multiconer/datasets/2022/EN-English/en_test.conll"}' -e 15 --epoch-partial 5 --n-max-config 3 -b 64 -g 1 2 --lr 1e-6 1e-5 --crf 0 1 --max-grad-norm 0 10 --weight-decay 0 1e-7
+tner-train-search -m "microsoft/deberta-v3-large" -c "/data/multiconer/models/2023/tner/2nd_exp/" -d "tner/tweetner7" "tner/tweebank_ner" "tner/mit_restaurant" "tner/bionlp2004" "tner/wnut2017" "tner/mit_movie_trivia" "tner/ontonotes5" "tner/bc5cdr" "tner/fin" "tner/btc" "tner/conll2003" -l '{"train": "/data/multiconer/datasets/2022/EN-English/en_train.conll", "validation": "/data/multiconer/datasets/2022/EN-English/en_dev.conll", "test": "/data/multiconer/datasets/2022/EN-English/en_test.conll"}' -e 15 --epoch-partial 5 --n-max-config 3 -b 64 -g 1 2 --lr 1e-6 1e-5 --crf 0 1 --max-grad-norm 0 10 --weight-decay 0 1e-7
 ```
 The best trained model will be in `/data/multiconer/models/2023/tner/2nd_exp/best_model`
 
