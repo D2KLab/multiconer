@@ -23,7 +23,7 @@ We evaluated our fine-tuned language model on the test sets of the MultiCoNER da
 
 - [Source code and explanation](2023)
 - [CodaLab competition](https://codalab.lisn.upsaclay.fr/competitions/10025)
-- [Official website](https://multiconer.github.io/multiconer_1/)
+- [Official website](https://multiconer.github.io/)
 
 |      Method       |  BN   |   DE   |  EN   |  ES   |  FA   |  FR   |  HI   |  IT   |  PT   |  SV   |  UK   |  ZH   |  Avg. |
 |:-----------------:|:-----:|:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
