@@ -34,13 +34,13 @@ We fine-tuned our language model on a diverse range of named entity recognition 
 
 T-NER offers a hyper parameters search approach in order to find the best hyper parameters across a set of given values. By using this feature, we have setup several experiments in order to know how much adding more data can improve a NER model and see until when it stops improving. The set of hyperparameters in T-NER was the same for all the experiments:
 
-* learning rate: 1e−4 − 5e−4 − 1e−5 − 5e−5 − 1e−6 − 5e−6
-* batch size: 8 - 16 - 32
-* CRF: with (1) - without (0)
-* gradient accumulation: 1 - 2 - 4
-* weight decay: 0 - 1e−6 − 1e−7 − 1e−8
-* max gradient normalization: 0 - 5 - 10 - 15
-* learning rate warmup: 0 - 0.1 - 0.2 - 0.3
+* learning rate: `1e−4` − `5e−4` − `1e−5` − `5e−5` − `1e−6` − `5e−6`
+* batch size: `8` - `16` - `32`
+* CRF: with (`1`) - without (`0`)
+* gradient accumulation: `1` - `2` - `4`
+* weight decay: `0` - `1e−6` − `1e−7` − `1e−8`
+* max gradient normalization: `0` - `5` - `10` - `15`
+* learning rate warmup: `0` - `0.1` - `0.2` - `0.3`
 
 The CRF parameter is for using a CRF layer on top of output embedding or not. The selected model for the experiments on English data was [DeBERTaV3-large](https://huggingface.co/microsoft/deberta-v3-large). The reason we have selected this model is because DeBERTaV3 is currently the state of the art encoder model on many downstream tasks (see https://paperswithcode.com/paper/debertav3-improving-deberta-using-electra).
 
