@@ -1,4 +1,4 @@
-# D2KLab at SemEval Task 2: MultiCoNER II
+# D2KLab at SemEval Task 2: MultiCoNER
 
 This repository contains the code used by the D2KLab team for [SemEval Task 2: MultiCoNER](https://multiconer.github.io/). The goal of this task is to detect semantically ambiguous and complex entities in short and low-context settings.
 
@@ -6,7 +6,7 @@ Each folder represents the year we have participated and the experiements we hav
 
 ## Experiment Results
 
-We evaluated our fine-tuned language model on the test sets of the MultiCoNER II datasets. The results are summarized in the tables below:
+We evaluated our fine-tuned language model on the test sets of the MultiCoNER datasets. The results are summarized in the tables below:
 
 ### 2022
 
