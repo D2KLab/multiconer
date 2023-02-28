@@ -1,18 +1,65 @@
-# SemEval 2023 MultiCoNER experiments
+# D2KLab at SemEval-2023 Task 2: Leveraging T-NER to develop a fine-tuned multilingual model
 
-All the experiments are done on Gravette on 2 GPUs.
+We used [T-NER](https://github.com/asahi417/tner), an open-source Python library, for fine-tuning a transformer-based language model for named entity recognition. T-NER provides an easy-to-use interface that allows for rapid experimentation with different language models, training data, and evaluation metrics.
 
-## 1st experiment
+## Table of Contents
+- [Datasets](#datasets)
+- [Experiments](#experiments)
+  - [Base model generation](#base-model-generation)
+  - [Fine-tuned model generation](#fine-tuned-model-generation)
+- [Evaluation](#evaluation)
+- [Citation](#citation)
 
-The goal of this experiment is to train a model over a large number of NER datasets. The training is done with [T-NER](https://github.com/asahi417/tner). To replicate the 1st experiment, one can run those lines:
-```
+## Datasets
+
+We fine-tuned our language model on a diverse range of named entity recognition (NER) datasets, including the Multilingual Complex Named Entity Recognition (MultiCoNER) 2022 dataset, as well as other publicly available datasets:
+
+|                               Dataset name                                 |   Nb. of entities  |  Nb. of entity types  |     Language    |  Year  |
+|:--------------------------------------------------------------------------:|:------------------:|:---------------------:|:---------------:|:------:|
+| [tner/tweetner7](https://huggingface.co/datasets/tner/tweetner7)           |       11,380       |          7            |     English     |  2022  |
+| [tner/tweebank_ner](https://huggingface.co/datasets/tner/tweebank_ner)     |        3,550       |          4            |     English     |  2022  |
+| [tner/mit_restaurant](https://huggingface.co/datasets/tner/mit_restaurant) |        9,181       |          8            |     English     |  2014  |
+| [tner/wnut2017](https://huggingface.co/datasets/tner/wnut2017)             |        4,691       |          6            |     English     |  2017  |
+| [tner/bionlp2004](https://huggingface.co/datasets/tner/bionlp2004)         |       22,402       |          5            |     English     |  2004  |
+| [tner/ontonotes5](https://huggingface.co/datasets/tner/ontonotes5)         |       76,714       |          8            |     English     |  2006  |
+| [tner/bc5cdr](https://huggingface.co/datasets/tner/bc5cdr)                 |       16,423       |          2            |     English     |  2016  |
+| [tner/fin](https://huggingface.co/datasets/tner/fin)                       |        1,467       |          4            |     English     |  2015  |
+| [tner/btc](https://huggingface.co/datasets/tner/btc)                       |        9,339       |          3            |     English     |  2016  |
+| [tner/conll2003](https://huggingface.co/datasets/tner/conll2003)           |       20,744       |          3            |     English     |  2003  |
+| [tner/wikiann](https://huggingface.co/datasets/tner/wikiann)               |         -          |          3            |  282 languages  |  2017  |
+| [tner/multinerd](https://huggingface.co/datasets/tner/multinerd)           |       13,048       |         17            |   9 languages   |  2022  |
+| [tner/wikineural](https://huggingface.co/datasets/tner/wikineural)         |         -          |         16            |   9 languages   |  2021  |
+
+## Experiments
+
+T-NER offers a hyper parameters search approach in order to find the best hyper parameters across a set of given values. By using this feature, we have setup several experiments in order to know how much adding more data can improve a NER model and see until when it stops improving. The set of hyperparameters in T-NER was the same for all the experiments:
+
+* learning rate: 1e−4 − 5e−4 − 1e−5 − 5e−5 − 1e−6 − 5e−6
+* batch size: 8 - 16 - 32
+* CRF: with (1) - without (0)
+* gradient accumulation: 1 - 2 - 4
+* weight decay: 0 - 1e−6 − 1e−7 − 1e−8
+* max gradient normalization: 0 - 5 - 10 - 15
+* learning rate warmup: 0 - 0.1 - 0.2 - 0.3
+
+The CRF parameter is for using a CRF layer on top of output embedding or not. The selected model for the experiments on English data was [DeBERTaV3-large](https://huggingface.co/microsoft/deberta-v3-large). The reason we have selected this model is because DeBERTaV3 is currently the state of the art encoder model on many downstream tasks (see https://paperswithcode.com/paper/debertav3-improving-deberta-using-electra).
+
+All the experiments have been done on 2 RTX 3090 GPUs using the same hyperparameters.
+
+### Base model generation
+
+The goal of this experiment is to train a model over a large number of [NER datasets](#datasets). To replicate the 1st experiment, one can run those lines:
+
+```bash
 git clone https://github.com/asahi417/tner
 cd tner
-tner-train-search -m "microsoft/deberta-v3-large" -c "/data/multiconer/models/2023/tner/1st_exp/" -d "tner/tweetner7" " "tner/tweebank_ner" "tner/mit_restaurant" "tner/bionlp2004" "tner/wnut2017" "tner/mit_movie_trivia" "tner/ontonotes5" "tner/bc5cdr" "tner/fin" "tner/btc" "tner/conll2003" -e 15 --epoch-partial 5 --n-max-config 3 -b 64 -g 1 2 --lr 1e-6 1e-5 --crf 0 1 --max-grad-norm 0 10 --weight-decay 0 1e-7
+tner-train-search -m "microsoft/deberta-v3-large" -c "1st_exp" -d "tner/tweetner7" " "tner/tweebank_ner" "tner/mit_restaurant" "tner/bionlp2004" "tner/wnut2017" "tner/mit_movie_trivia" "tner/ontonotes5" "tner/bc5cdr" "tner/fin" "tner/btc" "tner/conll2003" -e 15 --epoch-partial 5 --n-max-config 3 -b 64 -g 1 2 --lr 1e-6 1e-5 --crf 0 1 --max-grad-norm 0 10 --weight-decay 0 1e-7
 ```
-The best trained model will be in `/data/multiconer/models/2023/tner/1st_exp/best_model`
+
+The best trained model will be stored in a folder `1st_exp`.
 
 Results:
+
 ```
 			    precision	        recall		f1-score	support
 actor			    0.95		0.97		0.96		591
@@ -63,15 +110,18 @@ micro avg		    0.83		0.86		0.84		39652
 macro avg		    0.71		0.75		0.72		39652
 ```
 
-## 2nd experiment
+### Fine-tuned model generation
 
-The goal of this experiment is to train a model over a large number of NER datasets, including MulticoNER 2022. To replicate the 2nd experiment, one can run those lines, still with T-NER:
+We used the model from the previous experiment as a pre-tained model to finetune for our experiments on the MulticoNER 2023 dataset. The final model was trained with the same hyper parameters search values than the pre-trained model and finally the best hyper parameters stay the same as well. To replicate the 2nd experiment, one can run those lines:
+
+```bash
+tner-train-search -m "microsoft/deberta-v3-large" -c "2nd_exp" -d "tner/tweetner7" "tner/tweebank_ner" "tner/mit_restaurant" "tner/bionlp2004" "tner/wnut2017" "tner/mit_movie_trivia" "tner/ontonotes5" "tner/bc5cdr" "tner/fin" "tner/btc" "tner/conll2003" -l '{"train": "/data/multiconer/datasets/2022/EN-English/en_train.conll", "validation": "/data/multiconer/datasets/2022/EN-English/en_dev.conll", "test": "/data/multiconer/datasets/2022/EN-English/en_test.conll"}' -e 15 --epoch-partial 5 --n-max-config 3 -b 32 -g 1 2 --lr 1e-6 1e-5 --crf 0 1 --max-grad-norm 0 10 --weight-decay 0 1e-7
 ```
-tner-train-search -m "microsoft/deberta-v3-large" -c "/data/multiconer/models/2023/tner/2nd_exp/" -d "tner/tweetner7" "tner/tweebank_ner" "tner/mit_restaurant" "tner/bionlp2004" "tner/wnut2017" "tner/mit_movie_trivia" "tner/ontonotes5" "tner/bc5cdr" "tner/fin" "tner/btc" "tner/conll2003" -l '{"train": "/data/multiconer/datasets/2022/EN-English/en_train.conll", "validation": "/data/multiconer/datasets/2022/EN-English/en_dev.conll", "test": "/data/multiconer/datasets/2022/EN-English/en_test.conll"}' -e 15 --epoch-partial 5 --n-max-config 3 -b 32 -g 1 2 --lr 1e-6 1e-5 --crf 0 1 --max-grad-norm 0 10 --weight-decay 0 1e-7
-```
-The best trained model will be in `/data/multiconer/models/2023/tner/2nd_exp/best_model`
+
+The best trained model will be stored in a folder `2nd_exp/best_model`.
 
 Results:
+
 ```
 			    precision	        recall		f1-score	support
 actor			    0.96		0.97		0.96		591
@@ -121,3 +171,16 @@ work_of_art		    0.63		0.57		0.60		423
 micro avg		    0.84		0.86		0.85		40882
 macro avg		    0.74		0.77		0.75		40882
 ```
+
+## Evaluation
+
+Our system generated a model that participated in all MultiCoNER tracks, with macro-averaged F1 being the official ranking metric. The final ranking is also available at https://multiconer.github.io/results.
+
+|      Method       |  BN   |   DE   |  EN   |  ES   |  FA   |  FR   |  HI   |  IT   |  PT   |  SV   |  UK   |  ZH   |  Avg. |
+|:-----------------:|:-----:|:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| Official Baseline | 1.07  | 64.61  | 36.97 | 49.07 | 41.28 | 41.39 | 2.89  | 43.13 | 39.85 | 69.22 | 62.08 | 48.46 | 41.67 |
+|       D2KLab      | 61.43 | 67.09  | 61.29 | 63.17 | 54.2  | 64.09 | 63.29 | 64.77 | 60.79 | 62.98 | 64.14 | 54.92 | 61.84 |
+
+## Citation
+
+Not available yet.
